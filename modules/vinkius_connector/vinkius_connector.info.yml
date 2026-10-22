@@ -1,0 +1,7 @@
+name: 'Vinkius Connector'
+type: module
+description: 'Connect Drupal to Vinkius AI infrastructure.'
+core_version_requirement: ^10 || ^11
+package: 'Vinkius'
+dependencies:
+  - drupal:system

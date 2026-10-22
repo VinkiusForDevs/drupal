@@ -1,0 +1,1856 @@
+/**
+ * AI Governance section pages — native WordPress admin components.
+ *
+ * Builds on core .postbox / .wp-list-table / .nav-tab / .notice styles;
+ * only layout and a few accents are defined here. Spacing rhythm runs on
+ * a 20px beat between blocks, 16px inside grids.
+ *
+ * @license GPLv2 or later
+ */
+
+.vc-wrap .postbox .hndle {
+	cursor: default;
+}
+
+/* Postbox rhythm: 20px between siblings, none inside grids (the grid's
+ * gap already provides it). */
+.vc-wrap .postbox {
+	margin: 0 0 20px;
+}
+
+.vc-wrap .postbox:last-child {
+	margin-bottom: 0;
+}
+
+.vc-kpi-grid .postbox,
+.vc-cap-results .postbox {
+	margin: 0;
+}
+
+/* ── Section page ───────────────────────────────────────────────── */
+.vc-gov {
+	margin-top: 16px;
+}
+
+.vc-section-title {
+	margin: 0 0 12px;
+	padding: 0;
+	font-size: 1.3rem;
+	font-weight: 600;
+	line-height: 1.4;
+	color: #1d2327;
+}
+
+.vc-periods {
+	margin: 0 0 20px;
+}
+
+.vc-section-body {
+	margin-bottom: 4px;
+}
+
+/* Loading: one canonical pattern — a flex line with the WordPress
+ * spinner plus a short label. min-height keeps sections from jumping
+ * while the read is in flight. */
+.vc-loading {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin: 8px 0;
+	min-height: 40px;
+	font-size: 0.8125rem;
+	color: #71717a;
+}
+
+/* Core marks .spinner float:right and visibility:hidden; inside flex
+ * rows both get in the way. */
+.vc-loading .spinner.is-active,
+.vc-set-row--loading .spinner.is-active {
+	float: none;
+	margin: 0;
+	flex: 0 0 auto;
+}
+
+.vc-wrap .notice {
+	margin: 10px 0 20px;
+}
+
+/* ── KPI grid ───────────────────────────────────────────────────── */
+.vc-kpi-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+	gap: 16px;
+	margin: 0 0 20px;
+}
+
+.postbox .vc-kpi-grid {
+	margin: 4px 0 0;
+}
+
+.vc-kpi {
+	min-width: 0;
+}
+
+.vc-kpi .inside {
+	padding: 14px 16px;
+}
+
+.vc-kpi-value {
+	display: block;
+	font-size: 1.5rem;
+	font-weight: 600;
+	line-height: 1.2;
+	font-variant-numeric: tabular-nums;
+	overflow-wrap: anywhere;
+}
+
+.vc-kpi-label {
+	display: block;
+	margin-top: 5px;
+	font-size: 0.75rem;
+	line-height: 1.2;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: #646970;
+	overflow-wrap: anywhere;
+}
+
+.vc-kpi.is-warn .vc-kpi-value { color: #bd8600; }
+.vc-kpi.is-bad .vc-kpi-value { color: #d63638; }
+.vc-kpi.is-good .vc-kpi-value { color: #00a32a; }
+
+/* ── Tables ─────────────────────────────────────────────────────── */
+.vc-table-wrap {
+	overflow-x: auto;
+}
+
+.vc-table,
+.vc-feed-table {
+	margin: 0;
+}
+
+.vc-table th,
+.vc-table td,
+.vc-feed-table th,
+.vc-feed-table td {
+	vertical-align: middle;
+}
+
+.vc-num {
+	text-align: right;
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+}
+
+.vc-feed-table {
+	max-height: 340px;
+	overflow-y: auto;
+	display: block;
+}
+
+.vc-feed-table thead th {
+	position: sticky;
+	top: 0;
+	z-index: 1;
+	background: #f6f7f7;
+	box-shadow: inset 0 -1px 0 #c3c4c7;
+}
+
+.vc-feed-time {
+	width: 9em;
+	white-space: nowrap;
+	color: #646970;
+	font-variant-numeric: tabular-nums;
+}
+
+.vc-feed-tool {
+	max-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* ── Status pills ───────────────────────────────────────────────── */
+.vc-pill {
+	display: inline-block;
+	padding: 1px 10px;
+	border-radius: 999px;
+	font-size: 0.75rem;
+	font-weight: 600;
+	line-height: 1.6;
+	border: 1px solid #dcdcde;
+	color: #646970;
+	background: #f0f0f1;
+}
+
+.vc-pill-connected,
+.vc-pill-ok {
+	color: #007f4a;
+	border-color: #00a32a;
+	background: rgba(0, 163, 42, 0.08);
+}
+
+.vc-pill-expired,
+.vc-pill-err {
+	color: #b32d2e;
+	border-color: #d63638;
+	background: rgba(214, 54, 56, 0.08);
+}
+
+.vc-pill-warn {
+	color: #8a5b00;
+	border-color: #bd8600;
+	background: rgba(189, 134, 0, 0.08);
+}
+
+/* ── Capabilities catalog ───────────────────────────────────────── */
+.vc-cap {
+	margin-top: 16px;
+}
+
+.vc-cap-search {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin: 14px 0 4px;
+}
+
+.vc-cap-search #vc-cap-input {
+	flex: 1;
+	min-width: 0;
+	max-width: 34rem;
+}
+
+.vc-cap-cats-wrap {
+	margin: 2px 0 4px;
+}
+
+.vc-cap-cats {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	margin: 0;
+}
+
+.vc-cap-cats li {
+	display: flex;
+	align-items: center;
+	white-space: nowrap;
+}
+
+.vc-cap-cats li:not(:last-child)::after {
+	content: "|";
+	margin: 0 8px;
+	color: #c3c4c7;
+}
+
+.vc-cap-cats .count {
+	margin-left: 3px;
+	color: #646970;
+	font-size: 0.6875rem;
+}
+
+.vc-cap-dot {
+	flex-shrink: 0;
+	display: inline-block;
+	width: 8px;
+	height: 8px;
+	margin-right: 6px;
+	border-radius: 50%;
+}
+
+/* Featured strip */
+.vc-cap-top {
+	margin-top: 24px;
+}
+
+.vc-cap-top-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+	gap: 16px;
+	margin-top: 12px;
+}
+
+.vc-cap-top-card {
+	border-top: 3px solid var(--wp-admin-theme-color, #2271b1);
+}
+
+.vc-cap-card.vc-cap-top-card .vc-cap-card-inner {
+	padding: 16px 18px;
+	align-items: flex-start;
+}
+
+.vc-cap-logo.vc-cap-logo-lg {
+	width: 52px;
+	height: 52px;
+	border-radius: 8px;
+	font-size: 1.125rem;
+}
+
+.vc-cap-card.vc-cap-top-card .vc-cap-title {
+	font-size: 1rem;
+	white-space: normal;
+	line-height: 1.3;
+}
+
+.vc-cap-card.vc-cap-top-card .vc-cap-desc {
+	margin-top: 4px;
+	white-space: normal;
+	line-height: 1.45;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+.vc-cap-meta {
+	margin: 8px 0 0;
+	font-size: 0.6875rem;
+	line-height: 1.4;
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+	color: #646970;
+}
+
+.vc-cap-side-col {
+	flex-direction: column;
+	align-items: stretch;
+	justify-content: center;
+	gap: 8px;
+}
+
+.vc-cap-catalog-title {
+	margin: 28px 0 12px;
+}
+
+/* Catalog grid */
+.vc-cap-results {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+	gap: 16px;
+	margin-top: 16px;
+}
+
+.vc-cap-card .inside,
+.vc-cap-card-inner {
+	padding: 12px 14px;
+}
+
+.vc-cap-card-inner {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.vc-cap-main {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	text-align: left;
+	border: 0;
+	padding: 0;
+	background: transparent;
+	cursor: pointer;
+	font-family: inherit;
+	font-size: inherit;
+	color: inherit;
+}
+
+.vc-cap-main:focus-visible {
+	outline: 2px solid var(--wp-admin-theme-color, #2271b1);
+	outline-offset: 2px;
+}
+
+.vc-cap-main:hover .vc-cap-title {
+	color: var(--wp-admin-theme-color, #2271b1);
+}
+
+.vc-cap-logo {
+	width: 40px;
+	height: 40px;
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 6px;
+	border: 1px solid #dcdcde;
+	background: #f0f0f1;
+	color: #fff;
+	font-weight: 700;
+	font-size: 0.8125rem;
+	overflow: hidden;
+}
+
+.vc-cap-logo img {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+
+.vc-cap-text {
+	min-width: 0;
+	flex: 1;
+}
+
+.vc-cap-title {
+	margin: 0;
+	font-size: 0.875rem;
+	font-weight: 600;
+	line-height: 1.3;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.vc-cap-desc {
+	margin: 2px 0 0;
+	font-size: 0.75rem;
+	line-height: 1.3;
+	color: #646970;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.vc-cap-side {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-shrink: 0;
+}
+
+.vc-cap-sentinel {
+	display: flex;
+	min-height: 60px;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	color: #646970;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * Charts (cloudfrontend parity): cards, premium KPIs, accordions,
+ * compliance ring, expand modal, pagination.
+ * ═══════════════════════════════════════════════════════════════ */
+
+/* ── Latency / rate text colours (cloud hex values) ────────────── */
+.vc-lat-green { color: #34d399; }
+.vc-lat-amber { color: #fbbf24; }
+.vc-lat-red   { color: #f87171; }
+.vc-lat-unknown,
+.vc-mut       { color: #71717a; }
+.vc-rate-0    { color: #10b981; font-weight: 600; }
+.vc-rate-mid  { color: #f59e0b; font-weight: 600; }
+.vc-rate-high { color: #ef4444; font-weight: 600; }
+.vc-ok        { color: #34d399; }
+.vc-bad       { color: #f87171; }
+
+/* ── Chart card (port of ChartCard.tsx) ─────────────────────────── */
+.vc-chart-grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 16px;
+	margin: 0 0 20px;
+}
+
+.vc-chart-grid.vc-chart-grid--3 {
+	grid-template-columns: repeat(3, 1fr);
+}
+
+.vc-chart-card {
+	background: #fff;
+	border: 1px solid #e4e4e7;
+	border-radius: 8px;
+	margin: 0;
+}
+
+.vc-chart-head {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 12px 14px 0;
+}
+
+.vc-chart-title {
+	margin: 0;
+	font-size: 0.8125rem;
+	font-weight: 700;
+	color: #18181b;
+	line-height: 1.3;
+}
+
+.vc-chart-subtitle {
+	margin: 2px 0 0;
+	font-size: 0.75rem;
+	color: #71717a;
+	line-height: 1.3;
+}
+
+.vc-chart-actions {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-shrink: 0;
+}
+
+.vc-chart-expand {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 26px;
+	height: 26px;
+	border: 0;
+	border-radius: 6px;
+	background: transparent;
+	color: #71717a;
+	cursor: pointer;
+}
+
+.vc-chart-expand:hover {
+	background: #f0f0f1;
+	color: #18181b;
+}
+
+.vc-chart-details {
+	font-size: 0.75rem;
+	font-weight: 600;
+	color: #2271b1;
+	text-decoration: none;
+}
+
+.vc-chart-details:hover {
+	text-decoration: underline;
+}
+
+.vc-chart-body {
+	padding: 4px 8px 8px;
+}
+
+/* ── Expand overlay (port of ChartExpandModal) ──────────────────── */
+.vc-chart-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 100000;
+	background: rgba(15, 23, 42, 0.55);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 24px;
+}
+
+.vc-chart-overlay-box {
+	background: #fff;
+	border-radius: 10px;
+	width: min(960px, 92vw);
+	height: 60vh;
+	min-height: 320px;
+	display: flex;
+	flex-direction: column;
+	box-shadow: 0 16px 48px rgba(0, 0, 0, 0.25);
+}
+
+.vc-chart-overlay-box .vc-chart-head {
+	padding: 16px 18px 8px;
+}
+
+.vc-chart-overlay-box .vc-chart-title {
+	font-size: 0.9375rem;
+}
+
+.vc-chart-overlay-close {
+	width: 30px;
+	height: 30px;
+	border: 1px solid #dcdcde;
+	border-radius: 6px;
+	background: #fff;
+	font-size: 1.125rem;
+	line-height: 1;
+	color: #646970;
+	cursor: pointer;
+}
+
+.vc-chart-overlay-close:hover {
+	color: #1d2327;
+}
+
+.vc-chart-overlay-body {
+	flex: 1;
+	min-height: 0;
+	padding: 8px 14px 14px;
+}
+
+/* ── KPI premium card (port of OverviewKpiCard.tsx) ────────────── */
+.vc-kpi-strip {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 12px;
+	margin: 0 0 20px;
+}
+
+.vc-kpi-strip.vc-kpi-strip--2 {
+	grid-template-columns: repeat(2, 1fr);
+}
+
+.vc-kpi-card {
+	position: relative;
+	overflow: hidden;
+	background: #fff;
+	border: 1px solid #e4e4e7;
+	border-radius: 8px;
+	padding: 14px 16px;
+}
+
+.vc-kpi-card-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 6px;
+}
+
+.vc-kpi-card-label {
+	font-size: 0.8125rem;
+	font-weight: 500;
+	color: #3f3f46;
+}
+
+.vc-kpi-dot {
+	position: relative;
+	width: 8px;
+	height: 8px;
+}
+
+.vc-kpi-dot::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: 50%;
+	background: inherit;
+	opacity: 0.5;
+	animation: vc-ping 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.vc-kpi-dot::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: 50%;
+	background: inherit;
+}
+
+@keyframes vc-ping {
+	75%, 100% {
+		transform: scale(1.8);
+		opacity: 0;
+	}
+}
+
+.vc-kpi-dot--healthy { background: #34d399; }
+.vc-kpi-dot--warning { background: #fbbf24; }
+.vc-kpi-dot--critical { background: #f87171; }
+.vc-kpi-dot--neutral { background: #a1a1aa; }
+
+.vc-kpi-card-value {
+	font-size: 1.5rem;
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+	letter-spacing: -0.01em;
+	color: #18181b;
+	overflow-wrap: anywhere;
+}
+
+.vc-kpi-card-value.vc-kpi-value--healthy { color: #34d399; }
+.vc-kpi-card-value.vc-kpi-value--warning { color: #fbbf24; }
+.vc-kpi-card-value.vc-kpi-value--critical { color: #f87171; }
+
+.vc-kpi-card-sub {
+	display: block;
+	margin-top: 4px;
+	font-size: 0.8125rem;
+	color: #71717a;
+	line-height: 1.35;
+}
+
+.vc-kpi-spark {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 48px;
+	opacity: 0.6;
+	pointer-events: none;
+	transition: opacity 0.15s;
+}
+
+.vc-kpi-card:hover .vc-kpi-spark {
+	opacity: 0.8;
+}
+
+/* ── KPI cell (port of AgentsView KpiCell) and stat row (KpiStat) ─ */
+.vc-kpi-cells {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 1px;
+	margin: 8px 0 20px;
+	background: #d4d4d8;
+	border: 1px solid #d4d4d8;
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+.vc-kpi-cell {
+	background: #fff;
+	padding: 14px 16px;
+}
+
+.vc-kpi-cell-label {
+	font-size: 0.75rem;
+	font-weight: 500;
+	color: #71717a;
+}
+
+.vc-kpi-cell-value {
+	margin-top: 4px;
+	font-size: 1.25rem;
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+	color: #18181b;
+}
+
+.vc-kpi-cell-hint {
+	margin-top: 2px;
+	font-size: 0.75rem;
+	line-height: 1.3;
+	color: #71717a;
+}
+
+/* ── AI Briefing card (port of AiBriefingCard) ──────────────────── */
+.vc-briefing {
+	display: flex;
+	gap: 12px;
+	background: #fff;
+	border: 1px solid #e4e4e7;
+	border-radius: 8px;
+	padding: 14px 16px;
+	margin: 0 0 20px;
+}
+
+.vc-briefing-icon {
+	flex-shrink: 0;
+	width: 32px;
+	height: 32px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 8px;
+	background: rgba(139, 92, 246, 0.1);
+	color: #8b5cf6;
+}
+
+.vc-briefing-title {
+	font-size: 0.8125rem;
+	font-weight: 700;
+	color: #18181b;
+	margin: 0;
+}
+
+.vc-briefing-body {
+	margin: 4px 0 0;
+	font-size: 0.8125rem;
+	line-height: 1.55;
+	color: #52525b;
+	white-space: pre-line;
+}
+
+.vc-briefing-locked .vc-briefing-body {
+	font-style: italic;
+	color: #71717a;
+}
+
+.vc-briefing-unlock {
+	display: inline-block;
+	margin-top: 8px;
+	font-size: 0.75rem;
+	font-weight: 600;
+	color: #8b5cf6;
+	background: rgba(139, 92, 246, 0.1);
+	border-radius: 999px;
+	padding: 2px 10px;
+}
+
+/* ── Live feed outcome badges ───────────────────────────────────── */
+.vc-outcome {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 0.8125rem;
+	font-weight: 600;
+}
+
+.vc-outcome .vc-outcome-code {
+	font-family: Consolas, monospace;
+	font-weight: 400;
+	font-size: 0.75rem;
+	color: #71717a;
+}
+
+.vc-outcome--ok { color: #34d399; }
+.vc-outcome--enforced { color: #a855f7; }
+.vc-outcome--agent { color: #fbbf24; }
+.vc-outcome--upstream { color: #f87171; }
+.vc-outcome--vinkius { color: #a855f7; }
+
+.vc-mono-chip {
+	font-family: Consolas, monospace;
+	font-size: 0.8125rem;
+	color: #52525b;
+	background: rgba(24, 24, 27, 0.05);
+	border-radius: 4px;
+	padding: 1px 6px;
+}
+
+.vc-trace-dot {
+	display: inline-block;
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: #a855f7;
+}
+
+/* ── Accordion rows (Agent Passport / Access Tokens) ────────────── */
+.vc-acc {
+	border: 1px solid #e4e4e7;
+	border-radius: 8px;
+	background: #fff;
+	overflow: hidden;
+	margin: 0 0 20px;
+}
+
+.vc-acc-row {
+	border-bottom: 1px solid rgba(228, 228, 231, 0.5);
+}
+
+.vc-acc-row:last-child {
+	border-bottom: 0;
+}
+
+.vc-acc-head {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	width: 100%;
+	padding: 12px 16px;
+	border: 0;
+	background: transparent;
+	text-align: left;
+	cursor: pointer;
+	font-family: inherit;
+	font-size: inherit;
+	color: inherit;
+}
+
+.vc-acc-head:hover {
+	background: rgba(24, 24, 27, 0.03);
+}
+
+.vc-acc-row.is-open .vc-acc-head {
+	background: rgba(24, 24, 27, 0.04);
+}
+
+.vc-acc-chevron {
+	flex-shrink: 0;
+	width: 16px;
+	height: 16px;
+	color: #71717a;
+	transition: transform 0.2s;
+}
+
+.vc-acc-row.is-open .vc-acc-chevron {
+	transform: rotate(180deg);
+}
+
+.vc-acc-main {
+	flex: 1;
+	min-width: 0;
+}
+
+.vc-acc-title-row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+}
+
+.vc-acc-name {
+	font-size: 0.8125rem;
+	font-weight: 600;
+	color: #18181b;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.vc-acc-sub {
+	margin: 2px 0 0;
+	font-size: 0.75rem;
+	line-height: 1.3;
+	color: #71717a;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.vc-chip {
+	display: inline-block;
+	padding: 1px 8px;
+	border-radius: 999px;
+	font-size: 0.6875rem;
+	font-weight: 500;
+	background: #f0f0f1;
+	color: #52525b;
+	white-space: nowrap;
+}
+
+.vc-avatar {
+	flex-shrink: 0;
+	width: 32px;
+	height: 32px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 8px;
+	background: #f0f0f1;
+	font-size: 0.8125rem;
+	font-weight: 700;
+	color: #52525b;
+}
+
+.vc-acc-spark {
+	flex-shrink: 0;
+	width: 120px;
+	height: 32px;
+}
+
+.vc-acc-band {
+	padding: 12px 16px 16px 44px;
+	border-top: 1px solid rgba(228, 228, 231, 0.5);
+}
+
+.vc-acc-band-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 16px;
+}
+
+.vc-band-label {
+	font-size: 0.75rem;
+	font-weight: 500;
+	color: #71717a;
+	margin-bottom: 6px;
+}
+
+.vc-band-value {
+	font-size: 0.8125rem;
+	color: #18181b;
+}
+
+.vc-band-muted {
+	color: #71717a;
+}
+
+.vc-band-num {
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+}
+
+.vc-band-note {
+	margin: 6px 0 0;
+	font-size: 0.75rem;
+	line-height: 1.35;
+	color: #71717a;
+}
+
+.vc-band-warn {
+	color: #f59e0b;
+	font-weight: 500;
+}
+
+/* Lifecycle chips (Agent Passport). */
+.vc-lifecycle {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	font-size: 0.75rem;
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+.vc-lifecycle--active { color: #34d399; }
+.vc-lifecycle--dormant { color: #fbbf24; }
+.vc-lifecycle--zombie { color: #f87171; }
+.vc-lifecycle--disabled,
+.vc-lifecycle--never-used { color: #71717a; }
+
+/* ── Compliance ring + layout (Security Posture / Compliance) ───── */
+.vc-ring-wrap {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	padding: 16px;
+}
+
+.vc-ring {
+	width: 160px;
+	height: 160px;
+}
+
+.vc-ring-legend {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	font-size: 0.75rem;
+	color: #71717a;
+}
+
+.vc-ring-legend-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.vc-ring-legend-count {
+	font-weight: 600;
+	color: #18181b;
+	font-variant-numeric: tabular-nums;
+}
+
+/* Split card: KPI cluster + ring side by side (Security Posture). */
+.vc-duo {
+	display: grid;
+	grid-template-columns: 1fr minmax(220px, 280px);
+	gap: 20px;
+	align-items: stretch;
+	margin: 0 0 20px;
+}
+/* ── Segment bar: API vs Vinkius overhead (KPI cards / rows) ────── */
+.vc-segbar {
+	display: flex;
+	height: 6px;
+	border-radius: 999px;
+	overflow: hidden;
+	background: rgba(113, 113, 122, 0.15);
+	margin-top: 6px;
+}
+
+.vc-segbar-seg {
+	height: 100%;
+}
+
+.vc-seg-legend {
+	display: flex;
+	gap: 10px;
+	margin-top: 4px;
+	font-size: 0.6875rem;
+	color: #71717a;
+}
+
+.vc-seg-legend span::before {
+	content: "";
+	display: inline-block;
+	width: 8px;
+	height: 8px;
+	border-radius: 2px;
+	margin-right: 4px;
+	vertical-align: -1px;
+}
+
+.vc-seg-legend-api::before { background: #f59e0b; }
+.vc-seg-legend-cost::before { background: #f59e0b; }
+.vc-seg-legend-vinkius::before,
+.vc-seg-legend-savings::before { background: #34d399; }
+
+/* ── Pagination bar (port of PaginationBar) ─────────────────────── */
+.vc-pagbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 10px 16px;
+	border-top: 1px solid rgba(228, 228, 231, 0.5);
+	font-size: 0.75rem;
+	color: #71717a;
+}
+
+.vc-pagbar-pages {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+
+.vc-pagbar button {
+	min-width: 26px;
+	height: 26px;
+	padding: 0 8px;
+	border: 1px solid #dcdcde;
+	border-radius: 6px;
+	background: #fff;
+	color: #3f3f46;
+	font-size: 0.75rem;
+	cursor: pointer;
+}
+
+.vc-pagbar button[disabled] {
+	color: #a7a7ad;
+	cursor: default;
+}
+
+.vc-pagbar button.is-current {
+	background: #18181b;
+	border-color: #18181b;
+	color: #fff;
+	font-weight: 600;
+}
+
+.vc-pagbar .vc-pagbar-ellipsis {
+	padding: 0 2px;
+}
+
+/* ── Search input (Access Tokens) ───────────────────────────────── */
+.vc-search {
+	position: relative;
+	margin: 0 0 16px;
+}
+
+.vc-search svg {
+	position: absolute;
+	left: 10px;
+	top: 50%;
+	transform: translateY(-50%);
+	color: #71717a;
+	pointer-events: none;
+}
+
+.vc-search input {
+	width: 100%;
+	max-width: 420px;
+	height: 36px;
+	padding: 0 12px 0 32px;
+	border: 1px solid rgba(228, 228, 231, 0.5);
+	border-radius: 8px;
+	background: rgba(24, 24, 27, 0.03);
+	font-size: 0.8125rem;
+	color: #18181b;
+	outline: none;
+}
+
+.vc-search input:focus {
+	border-color: rgba(34, 113, 177, 0.3);
+	box-shadow: 0 0 0 1px rgba(34, 113, 177, 0.2);
+}
+
+/* ── Empty state band ────────────────────────────────────────────── */
+.vc-empty {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	border: 1px solid rgba(16, 185, 129, 0.4);
+	background: rgba(16, 185, 129, 0.05);
+	color: #10b981;
+	border-radius: 8px;
+	padding: 10px 16px;
+	margin: 0 0 20px;
+	font-size: 0.8125rem;
+	font-weight: 500;
+}
+
+/* ── Section bands: title + hint (registry / inventory) ─────────── */
+.vc-band-title {
+	margin: 0 0 2px;
+	font-size: 0.8125rem;
+	font-weight: 700;
+	color: #18181b;
+}
+
+.vc-band-hint {
+	margin: 0 0 8px;
+	font-size: 0.8125rem;
+	color: #71717a;
+	line-height: 1.45;
+}
+
+.vc-band-row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+/* ── Responsive: collapse grid columns on narrow admin windows ──── */
+@media (max-width: 1200px) {
+	.vc-chart-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.vc-chart-grid.vc-chart-grid--3 {
+		grid-template-columns: 1fr;
+	}
+
+	.vc-kpi-strip {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.vc-duo {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 850px) {
+	.vc-kpi-cells {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.vc-acc-band-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.vc-acc-spark {
+		display: none;
+	}
+}
+/* ── Table card (port of DataTable.tsx card shell) ─────────────── */
+.vc-table-card {
+	background: #fff;
+	border: 1px solid #e4e4e7;
+	border-radius: 8px;
+	overflow: hidden;
+	margin: 0 0 20px;
+}
+
+.vc-table-card.vc-table-card--flush {
+	margin-bottom: 0;
+}
+
+.vc-tbl-head {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	padding: 12px 14px 8px;
+}
+
+.vc-tbl-head-row {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.vc-tbl-title {
+	margin: 0;
+	font-size: 0.8125rem;
+	font-weight: 700;
+	color: #18181b;
+}
+
+.vc-tbl-sub {
+	font-size: 0.75rem;
+	color: #71717a;
+}
+
+.vc-live-dot {
+	position: relative;
+	width: 8px;
+	height: 8px;
+	flex-shrink: 0;
+}
+
+.vc-live-dot::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: 50%;
+	background: #34d399;
+	opacity: 0.5;
+	animation: vc-ping 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.vc-live-dot::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: 50%;
+	background: #34d399;
+}
+
+.vc-tbl {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 0;
+}
+
+.vc-tbl th,
+.vc-tbl td {
+	padding: 8px 14px;
+	font-size: 0.8125rem;
+	border-top: 1px solid rgba(228, 228, 231, 0.5);
+	vertical-align: middle;
+}
+
+.vc-tbl th {
+	font-size: 0.75rem;
+	font-weight: 600;
+	color: #71717a;
+	background: rgba(24, 24, 27, 0.02);
+	white-space: nowrap;
+}
+
+.vc-tbl td {
+	color: #18181b;
+}
+
+.vc-tbl tbody tr {
+	transition: background 0.12s;
+}
+
+.vc-tbl.is-clickable tbody tr {
+	cursor: pointer;
+}
+
+.vc-tbl.is-clickable tbody tr:hover {
+	background: rgba(24, 24, 27, 0.03);
+}
+
+.vc-tbl .vc-num {
+	text-align: right;
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+}
+
+.vc-tbl .vc-mono {
+	font-family: Consolas, monospace;
+	font-size: 0.8125rem;
+}
+
+.vc-tbl .vc-center {
+	text-align: center;
+}
+
+.vc-tbl .vc-muted {
+	color: #71717a;
+}
+
+.vc-tbl .vc-bold {
+	font-weight: 700;
+}
+
+.vc-tbl .vc-blue { color: #60a5fa; }
+.vc-tbl .vc-amber { color: #f59e0b; }
+.vc-tbl .vc-purple { color: #a855f7; }
+.vc-tbl .vc-emerald { color: #34d399; }
+
+.vc-tbl-empty {
+	padding: 24px;
+	text-align: center;
+	font-size: 0.8125rem;
+	color: #71717a;
+}
+
+.vc-tbl-wrap {
+	overflow-x: auto;
+}
+
+/* ── Compliance questions / gaps / frameworks / export box ─────── */
+.vc-q-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 16px;
+	margin: 0 0 20px;
+}
+
+.vc-q-card {
+	background: #fff;
+	border: 1px solid #e4e4e7;
+	border-radius: 8px;
+	padding: 14px 16px;
+}
+
+.vc-q-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	margin-bottom: 8px;
+}
+
+.vc-q-title {
+	margin: 0;
+	font-size: 0.875rem;
+	font-weight: 700;
+	color: #18181b;
+	line-height: 1.3;
+}
+
+.vc-q-detail {
+	margin: 4px 0 0;
+	font-size: 0.8125rem;
+	line-height: 1.5;
+	color: #52525b;
+}
+
+.vc-gap-row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 10px;
+	padding: 8px 0;
+	border-top: 1px solid rgba(228, 228, 231, 0.6);
+}
+
+.vc-gap-row:first-of-type {
+	border-top: 0;
+}
+
+.vc-gap-title {
+	flex: 1;
+	min-width: 180px;
+	font-size: 0.8125rem;
+	color: #18181b;
+}
+
+.vc-fw-card {
+	border: 1px solid #e4e4e7;
+	border-radius: 8px;
+	padding: 12px 16px;
+	margin-bottom: 14px;
+}
+
+.vc-fw-card:last-child {
+	margin-bottom: 0;
+}
+
+.vc-fw-head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 10px;
+}
+
+.vc-fw-name {
+	margin: 0;
+	font-size: 0.875rem;
+	font-weight: 700;
+	color: #18181b;
+}
+
+.vc-fw-pct {
+	font-size: 1.125rem;
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+	color: #18181b;
+}
+
+.vc-fw-chips {
+	display: flex;
+	gap: 6px;
+	margin: 8px 0 4px;
+	flex-wrap: wrap;
+}
+
+.vc-export-box {
+	flex-shrink: 0;
+	text-align: right;
+	max-width: 320px;
+}
+
+.vc-export-box .vc-band-title,
+.vc-export-box .vc-band-hint {
+	text-align: left;
+}
+
+.vc-agent-quick {
+	flex-shrink: 0;
+	align-self: center;
+	text-align: right;
+	white-space: nowrap;
+}
+
+@media (max-width: 850px) {
+	.vc-q-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.vc-band-row {
+		flex-direction: column;
+	}
+}
+/* ── KPI value row (KpiStat: label left, value right) ───────────── */
+.vc-kpi-value-row {
+	font-size: 0.875rem;
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+}
+
+/* Global status/latency colours (used by KPI values, table cells, chips). */
+.vc-blue { color: #60a5fa; }
+.vc-amber { color: #f59e0b; }
+.vc-purple { color: #a855f7; }
+.vc-emerald { color: #34d399; }
+
+/* Progress bar segment colours. */
+.vc-seg--emerald { background: rgba(16, 185, 129, 0.7); }
+.vc-seg--amber { background: rgba(245, 158, 11, 0.7); }
+.vc-seg--red { background: rgba(239, 68, 68, 0.7); }
+.vc-seg--blue { background: rgba(59, 130, 246, 0.7); }
+.vc-seg--purple { background: rgba(168, 85, 247, 0.7); }
+
+/* Health dots (Connector Traffic / Request Failures rows). */
+.vc-health {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	font-size: 0.8125rem;
+	font-weight: 500;
+}
+
+.vc-dot {
+	display: inline-block;
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+}
+
+.vc-dot-ok { background: #10b981; }
+.vc-dot-warn { background: #f59e0b; }
+.vc-dot-bad { background: #ef4444; }
+.vc-dot-mut { background: #71717a; }
+.vc-dot-violet { background: #8b5cf6; }
+
+/* Accordion: calls counter (Agent Passport rows). */
+.vc-acc-calls {
+	flex-shrink: 0;
+	font-size: 0.75rem;
+	font-variant-numeric: tabular-nums;
+	color: #71717a;
+}
+/* ── KPI strip column parity with the cloud (2 → 3/4/6-up on wide windows) ── */
+@media (min-width: 1600px) {
+	.vc-kpi-strip.vc-kpi-strip--2 {
+		grid-template-columns: repeat(4, 1fr);
+	}
+
+	.vc-kpi-cells {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
+
+@media (min-width: 1900px) {
+	.vc-kpi-strip {
+		grid-template-columns: repeat(6, 1fr);
+	}
+}
+/* ── Numeric column alignment (cloud table parity) ──────────────── */
+.vc-tbl .vc-right,
+.vc-tbl th.vc-right {
+	text-align: right;
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+}
+
+.vc-tbl th.vc-center {
+	text-align: center;
+}
+
+/* == Monospace reference keys (gaps, framework controls, pack rows) ===== */
+.vc-ref {
+	font-family: Consolas, monospace;
+	font-size: 11px;
+	letter-spacing: 0.02em;
+	color: #71717a;
+	white-space: nowrap;
+}
+
+/* == Evidence packs (generate + verify, in-panel) ======================= */
+/* Right column of the generate band: button and its result line stacked,
+ * closed at the row edge. */
+.vc-pack-actions {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 6px;
+	flex-shrink: 0;
+}
+
+.vc-pack-gen {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin-top: 4px;
+	text-align: right;
+}
+
+.vc-pack-hint {
+	font-size: 0.75rem;
+}
+
+/* Result line of "Generate evidence pack": a slim note, tinted by kind
+ * (ok = sealed, free = upgrade CTA, err = failure). */
+.vc-pack-msg-ok,
+.vc-pack-msg-free,
+.vc-pack-msg-err {
+	padding: 6px 10px;
+	border-left: 3px solid transparent;
+	border-radius: 4px;
+	background: transparent;
+	line-height: 1.45;
+}
+
+.vc-pack-msg-ok {
+	color: #047857;
+	border-left-color: #34d399;
+	background: rgba(16, 185, 129, 0.06);
+}
+
+.vc-pack-msg-free {
+	color: #8a5b00;
+	border-left-color: #fbbf24;
+	background: rgba(189, 134, 0, 0.07);
+}
+
+.vc-pack-msg-err {
+	color: #b32d2e;
+	border-left-color: #f87171;
+	background: rgba(214, 54, 56, 0.06);
+}
+
+/* One pack row: version + date on the left, digest chip + Verify on the
+ * right (replaces the old inline-styled band). */
+.vc-pack-band {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 10px 16px;
+	font-size: 0.75rem;
+}
+
+.vc-pack-band-left {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.vc-pack-band-left .vc-ref {
+	margin: 0 6px;
+}
+
+.vc-pack-band-right {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-shrink: 0;
+	color: #71717a;
+}
+
+/* Verify panel under a pack row. NOTE: it is a sibling of .vc-acc-band
+ * (child of .vc-acc-row) — the old ".vc-acc-band .vc-pack-detail"
+ * descendant selector never matched. */
+.vc-pack-detail {
+	padding: 2px 16px 14px 44px;
+	border-top: 1px solid rgba(228, 228, 231, 0.5);
+	word-break: break-all;
+}
+
+.vc-pack-detail .vc-band-label {
+	font-size: 0.7rem;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: #a1a1aa;
+	margin: 10px 0 2px;
+}
+
+.vc-pack-detail .vc-band-label:first-of-type {
+	margin-top: 4px;
+}
+
+/* Drill-down pagination sits below the drill table. */
+.vc-drill-pagbar {
+	margin-top: 12px;
+}
+
+.vc-pack-detail .vc-acc-band-grid {
+	margin-top: 10px;
+}
+
+.vc-pack-detail .vc-band-note {
+	margin-top: 10px;
+}
+
+/* == Rows container: hairline separators between siblings ============== */
+.vc-rows > * + * {
+	border-top: 1px solid rgba(228, 228, 231, 0.5);
+}
+
+/* Band variant without the 44px probe indent (prose-only bands). */
+.vc-acc-band--flush {
+	padding: 12px 16px;
+}
+
+/* == Enforcement settings (DLP/FinOps mirror) =========================== */
+.vc-settings {
+	padding-top: 2px;
+}
+
+.vc-settings .vc-table-card {
+	margin: 0 0 16px;
+}
+
+.vc-settings .vc-table-card:last-child {
+	margin-bottom: 0;
+}
+
+.vc-set-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 10px 14px;
+	font-size: 0.8125rem;
+}
+
+.vc-set-row .vc-set-label {
+	flex: 1;
+	min-width: 0;
+	color: #3f3f46;
+}
+
+.vc-set-row--loading {
+	color: #71717a;
+	font-size: 0.75rem;
+}
+
+.vc-set-fail {
+	padding: 4px 14px 12px;
+	margin: 0;
+	font-size: 0.75rem;
+	color: #71717a;
+}
+
+/* == Framework control rows (Compliance reference) ====================== */
+.vc-fw-rows {
+	overflow-x: auto;
+}
+
+.vc-fw-row {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 10px 14px;
+	font-size: 0.8125rem;
+}
+
+.vc-fw-row .vc-fw-ref {
+	width: 70px;
+	flex-shrink: 0;
+}
+
+.vc-fw-row .vc-fw-title {
+	flex: 1;
+	min-width: 0;
+}
+
+.vc-fw-bar {
+	margin-top: 8px;
+}
+
+/* == Compliance hero: ring + answers side by side ======================= */
+.vc-ring-hero {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 16px 24px;
+	padding: 16px;
+}
+
+.vc-ring-hero .vc-ring {
+	flex-shrink: 0;
+}
+
+.vc-hero-questions {
+	padding: 12px 16px 16px;
+	border-top: 1px solid rgba(228, 228, 231, 0.5);
+	margin-top: 12px;
+}
+
+/* == Incidents: quarantine + control trail ============================== */
+#vc-incident-quarantine {
+	overflow: hidden;
+}
+
+/* Row gutters match the control-trail table padding (8px/14px) so text
+ * columns and separators align across the two postboxes on this screen. */
+.vc-quar-item {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 12px 14px 14px;
+}
+
+.vc-quar-item + .vc-quar-item {
+	border-top: 1px solid rgba(228, 228, 231, 0.6);
+}
+
+.vc-quar-main {
+	flex: 1;
+	min-width: 0;
+}
+
+.vc-quar-name {
+	font-size: 0.875rem;
+	font-weight: 600;
+	color: #18181b;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.vc-quar-reason {
+	margin: 2px 0 0;
+	font-size: 0.75rem;
+	line-height: 1.4;
+	color: #71717a;
+	overflow-wrap: anywhere;
+}
+
+.vc-quar-side {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 8px;
+	flex-shrink: 0;
+}
+
+.vc-incident-q-actions {
+	display: flex;
+	gap: 6px;
+}
+
+#vc-audit-tabs .nav-tab {
+	cursor: pointer;
+}
+
+#vc-audit-feed table.vc-tbl {
+	margin-top: 8px;
+	font-size: 0.75rem;
+}
+
+/* == Drill-down header =================================================== */
+.vc-drill-head {
+	display: flex;
+	justify-content: flex-end;
+	margin-bottom: 2px;
+}

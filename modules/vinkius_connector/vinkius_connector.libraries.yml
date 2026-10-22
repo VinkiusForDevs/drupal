@@ -1,0 +1,14 @@
+vinkius:
+  version: 1.0.0
+  css:
+    theme:
+      admin/css/vinkius-connector.css: {}
+      admin/css/vc-governance.css: {}
+  js:
+    admin/js/vinkius-connector.js: {}
+    admin/js/vendor/echarts.min.js: {}
+    admin/js/vc-charts.js: {}
+    admin/js/vc-governance.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery

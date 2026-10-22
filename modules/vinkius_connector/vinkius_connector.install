@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function vinkius_connector_schema() {
+  $schema['vinkius_connector_consents'] = [
+    'description' => 'Visitor consent records.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+      ],
+      'external_id' => [
+        'type' => 'varchar',
+        'length' => 191,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'uid' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'scopes' => [
+        'type' => 'text',
+        'not null' => FALSE,
+      ],
+      'purpose' => [
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => 'agent_action',
+      ],
+      'ip_hash' => [
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => FALSE,
+        'default' => '',
+      ],
+      'created_at' => [
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'revoked_at' => [
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => FALSE,
+        'default' => NULL,
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'external_id' => ['external_id'],
+    ],
+  ];
+  return $schema;
+}

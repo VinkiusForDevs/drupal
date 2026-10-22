@@ -1,0 +1,16 @@
+vinkius_connector.admin:
+  path: '/admin/config/vinkius'
+  defaults:
+    _controller: '\Drupal\vinkius_connector\Controller\VinkiusController::admin'
+    _title: 'Vinkius'
+  requirements:
+    _permission: 'administer vinkius connector'
+
+vinkius_connector.ajax:
+  path: '/vinkius/ajax'
+  defaults:
+    _controller: '\Drupal\vinkius_connector\Controller\AjaxController::handle'
+    _title: 'Vinkius AJAX'
+  requirements:
+    _permission: 'administer vinkius connector'
+  methods: [GET, POST]
