@@ -6,11 +6,19 @@ vinkius_connector.admin:
   requirements:
     _permission: 'administer vinkius connector'
 
+vinkius_connector.consent:
+  path: '/vinkius/consent'
+  defaults:
+    _controller: '\Drupal\vinkius_connector\Controller\VinkiusController::consent'
+    _title: 'AI agent consent'
+  requirements:
+    _access: 'TRUE'
+
 vinkius_connector.ajax:
   path: '/vinkius/ajax'
   defaults:
     _controller: '\Drupal\vinkius_connector\Controller\AjaxController::handle'
     _title: 'Vinkius AJAX'
   requirements:
-    _permission: 'administer vinkius connector'
+    _access: 'TRUE'
   methods: [GET, POST]

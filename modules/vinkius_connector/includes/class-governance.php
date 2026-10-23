@@ -7,8 +7,9 @@
  * @package VinkiusConnector
  */
 
-namespace Drupal\vinkius_connector;
+namespace VinkiusConnector;
 
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Observation and response layer. Every value is a live API read —
@@ -291,7 +292,7 @@ final class Governance {
 	public function capabilities( $q = '', $page = 1, $sort = 'popular', $category = '' ) {
 		$q        = trim( (string) $q );
 		$page     = max( 1, (int) $page );
-		$category = strtolower(preg_replace('/[^a-z0-9]+/', '-', (string) $category));
+		$category = sanitize_title( (string) $category );
 
 		if ( mb_strlen( $q ) >= 2 ) {
 			$result = $this->api->marketplace_search( $q, $page );
@@ -494,7 +495,7 @@ final class Governance {
 	public function halt_all() {
 		$local = true;
 		Options::set( 'halt', true );
-		Options::set( 'halted_at', date('Y-m-d H:i:s') );
+		Options::set( 'halted_at', current_time( 'mysql', true ) );
 
 		if ( ! Options::is_configured() ) {
 			return Result::ok( array( 'local' => $local, 'runtime' => 'skipped' ) );

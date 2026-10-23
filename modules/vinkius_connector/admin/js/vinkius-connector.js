@@ -1,3 +1,4 @@
+window.VCConfig = window.VCConfig || (window.drupalSettings && window.drupalSettings.VCConfig);
 /**
  * Vinkius AI Governance panel.
  *

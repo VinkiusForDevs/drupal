@@ -11,4 +11,5 @@ vinkius:
     admin/js/vc-governance.js: {}
   dependencies:
     - core/drupal
+    - core/drupalSettings
     - core/jquery

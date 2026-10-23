@@ -7,20 +7,13 @@
  * @package VinkiusConnector
  */
 
-namespace Drupal\vinkius_connector\Rest;
+namespace VinkiusConnector\Rest;
 
-use Drupal\vinkius_connector\Governance;
-use Drupal\vinkius_connector\ConsentRepo;
-use Drupal\vinkius_connector\Options;
-use Drupal\vinkius_connector\AuthStore;
-use Drupal\vinkius_connector\DeviceFlow;
-use Drupal\vinkius_connector\VinkiusApi;
-use Drupal\vinkius_connector\Result;
-use Drupal\vinkius_connector\Links;
-use Drupal\vinkius_connector\ConsentService;
-use Drupal\vinkius_connectorWP_REST_Request;
-use Drupal\vinkius_connectorWP_REST_Response;
+use VinkiusConnector\Governance;
+use VinkiusConnector\Models\ConsentRepo;
+use VinkiusConnector\Options;
 
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Public: agent manifest, consent.
@@ -79,12 +72,12 @@ final class Rest {
 	/**
 	 * Admin guard.
 	 *
-	 * @param WP_REST_Request $request Request.
+	 * @param \WP_REST_Request $request Request.
 	 * @return bool|\WP_Error
 	 */
 	public static function can_admin( $request ) {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			return FALSE;
+			return new \WP_Error( 'vc_forbidden', 'Insufficient permissions.', array( 'status' => 403 ) );
 		}
 
 		return true;
@@ -95,11 +88,11 @@ final class Rest {
 	/**
 	 * Agent-readable site manifest.
 	 *
-	 * @return WP_REST_Response
+	 * @return \WP_REST_Response
 	 */
 	public static function agent_manifest( $request ) {
 		if ( Options::is_halted() ) {
-			return new WP_REST_Response(
+			return new \WP_REST_Response(
 				array(
 					'agent_manifest' => array(
 						'halted'  => true,
@@ -116,7 +109,7 @@ final class Rest {
 				'name'        => get_bloginfo( 'name' ),
 				'url'         => get_site_url(),
 				'description' => get_bloginfo( 'description' ),
-				'generator'   => 'vinkius-connector/1.0.0',
+				'generator'   => 'vinkius-connector/' . VC_VERSION,
 			),
 			'vinkius'        => array(
 				'configured' => Options::is_configured(),
@@ -125,8 +118,8 @@ final class Rest {
 			),
 			'consent'        => array(
 				'required' => true,
-				'endpoint' => '/vinkius/ajax?route=consent',
-				'revoke'   => '/vinkius/ajax?route=consent/revoke&token={revoke_token}',
+				'endpoint' => rest_url( self::NAMESPACE . '/consent' ),
+				'revoke'   => rest_url( self::NAMESPACE . '/consent/revoke?token={revoke_token}' ),
 			),
 			'generated_at'   => gmdate( 'Y-m-d H:i:s' ),
 		);
@@ -137,8 +130,8 @@ final class Rest {
 	/**
 	 * Record visitor consent.
 	 *
-	 * @param WP_REST_Request $request Request.
-	 * @return WP_REST_Response
+	 * @param \WP_REST_Request $request Request.
+	 * @return \WP_REST_Response
 	 */
 	public static function consent_create( $request ) {
 		$ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
@@ -149,14 +142,14 @@ final class Rest {
 	/**
 	 * Revoke a consent by token.
 	 *
-	 * @param WP_REST_Request $request Request.
-	 * @return WP_REST_Response
+	 * @param \WP_REST_Request $request Request.
+	 * @return \WP_REST_Response
 	 */
 	public static function consent_revoke( $request ) {
 		$ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
 
 		if ( ! ConsentService::revoke_throttle_ok( $ip ) ) {
-			return new WP_REST_Response(
+			return new \WP_REST_Response(
 				array( 'error' => 'rate_limited', 'message' => __( 'Too many requests. Please try again later.', 'vinkius-connector' ) ),
 				429
 			);
@@ -165,7 +158,7 @@ final class Rest {
 		$row_id = ConsentRepo::resolve_revoke_token( (string) $request->get_param( 'token' ) );
 
 		if ( ! $row_id || ! ConsentRepo::revoke( $row_id ) ) {
-			return new WP_REST_Response( array( 'revoked' => false ), 404 );
+			return new \WP_REST_Response( array( 'revoked' => false ), 404 );
 		}
 
 		return rest_ensure_response( array( 'revoked' => true ) );
@@ -176,11 +169,11 @@ final class Rest {
 	/**
 	 * Connection/status snapshot.
 	 *
-	 * @return WP_REST_Response
+	 * @return \WP_REST_Response
 	 */
 	public static function panel_status() {
-		$auth = \VinkiusConnectorAuthStore::status();
-		$flow = new \VinkiusConnectorDeviceFlow();
+		$auth = \VinkiusConnector\Auth\AuthStore::status();
+		$flow = new \VinkiusConnector\Auth\DeviceFlow();
 
 		return rest_ensure_response(
 			array(
@@ -196,8 +189,8 @@ final class Rest {
 	/**
 	 * One governance section page (live read).
 	 *
-	 * @param WP_REST_Request $request {section, period, page}.
-	 * @return WP_REST_Response
+	 * @param \WP_REST_Request $request {section, period, page}.
+	 * @return \WP_REST_Response
 	 */
 	public static function panel_section( $request ) {
 		$section = (string) $request->get_param( 'section' );
@@ -230,8 +223,8 @@ final class Rest {
 	/**
 	 * AI-narrated briefing of one scope (the panel's briefing card).
 	 *
-	 * @param WP_REST_Request $request {scope, period}.
-	 * @return WP_REST_Response
+	 * @param \WP_REST_Request $request {scope, period}.
+	 * @return \WP_REST_Response
 	 */
 	public static function panel_briefing( $request ) {
 		$scope  = (string) $request->get_param( 'scope' );
@@ -247,7 +240,7 @@ final class Rest {
 	/**
 	 * Generated evidence packs (Compliance & Evidence section).
 	 *
-	 * @return WP_REST_Response
+	 * @return \WP_REST_Response
 	 */
 	public static function panel_evidence_packs() {
 		return rest_ensure_response( ( new Governance() )->evidence_packs()->to_view() );
@@ -256,8 +249,8 @@ final class Rest {
 	/**
 	 * Full agent registry export (one read, whole registry).
 	 *
-	 * @param WP_REST_Request $request {period}.
-	 * @return WP_REST_Response
+	 * @param \WP_REST_Request $request {period}.
+	 * @return \WP_REST_Response
 	 */
 	public static function panel_agents_export( $request ) {
 		$period = (string) $request->get_param( 'period' );
@@ -272,24 +265,24 @@ final class Rest {
 	/**
 	 * Execution tokens of one connector (Access Tokens accordion, lazy load).
 	 *
-	 * @param WP_REST_Request $request {server_id}.
-	 * @return WP_REST_Response
+	 * @param \WP_REST_Request $request {server_id}.
+	 * @return \WP_REST_Response
 	 */
 	public static function panel_tokens( $request ) {
 		$server_id = (string) $request->get_param( 'server_id' );
 
 		if ( '' === $server_id ) {
-			return rest_ensure_response( Result::error( 'vc_missing_server' )->to_view() );
+			return rest_ensure_response( \VinkiusConnector\Result::error( 'vc_missing_server' )->to_view() );
 		}
 
-		return rest_ensure_response( ( new \VinkiusConnectorVinkiusApi() )->tokens( $server_id )->to_view() );
+		return rest_ensure_response( ( new \VinkiusConnector\VinkiusApi() )->tokens( $server_id )->to_view() );
 	}
 
 	/**
 	 * Capabilities catalog: search or browse (+ stats, categories).
 	 *
-	 * @param WP_REST_Request $request {q, page, sort, category}.
-	 * @return WP_REST_Response
+	 * @param \WP_REST_Request $request {q, page, sort, category}.
+	 * @return \WP_REST_Response
 	 */
 	public static function panel_capabilities( $request ) {
 		$q        = (string) $request->get_param( 'q' );
@@ -303,7 +296,7 @@ final class Rest {
 	/**
 	 * Incidents payload.
 	 *
-	 * @return WP_REST_Response
+	 * @return \WP_REST_Response
 	 */
 	public static function panel_incidents() {
 		return rest_ensure_response( ( new Governance() )->incidents()->to_view() );
@@ -312,8 +305,8 @@ final class Rest {
 	/**
 	 * Halt: local and/or runtime triggers.
 	 *
-	 * @param WP_REST_Request $request {scope: local|connector|all, server_id?, reason?}.
-	 * @return WP_REST_Response
+	 * @param \WP_REST_Request $request {scope: local|connector|all, server_id?, reason?}.
+	 * @return \WP_REST_Response
 	 */
 	public static function panel_halt( $request ) {
 		$governance = new Governance();
@@ -328,7 +321,7 @@ final class Rest {
 			 * never let it fall through to the org-wide halt.
 			 */
 			if ( '' === $server_id ) {
-				return rest_ensure_response( Result::error( 'vc_missing_server' )->to_view() );
+				return rest_ensure_response( \VinkiusConnector\Result::error( 'vc_missing_server' )->to_view() );
 			}
 
 			$result = $governance->halt_connector( $server_id, $reason );
@@ -354,8 +347,8 @@ final class Rest {
 	/**
 	 * Resume local and runtime halts.
 	 *
-	 * @param WP_REST_Request $request {scope: local|all}.
-	 * @return WP_REST_Response
+	 * @param \WP_REST_Request $request {scope: local|all}.
+	 * @return \WP_REST_Response
 	 */
 	public static function panel_resume( $request = null ) {
 		$scope = 'all';
@@ -381,7 +374,7 @@ final class Rest {
 	/**
 	 * Approve resumption after a circuit-breaker trip.
 	 *
-	 * @return WP_REST_Response
+	 * @return \WP_REST_Response
 	 */
 	public static function panel_circuit_reset() {
 		return rest_ensure_response( ( new Governance() )->circuit_reset()->to_view() );
@@ -390,17 +383,17 @@ final class Rest {
 	/**
 	 * Per-connector SOAR response action.
 	 *
-	 * @param WP_REST_Request $request {action: status|lift|extend|kill, server_id, reason?}.
-	 * @return WP_REST_Response
+	 * @param \WP_REST_Request $request {action: status|lift|extend|kill, server_id, reason?}.
+	 * @return \WP_REST_Response
 	 */
 	public static function panel_connector( $request ) {
-		$api       = new \VinkiusConnectorVinkiusApi();
+		$api       = new \VinkiusConnector\VinkiusApi();
 		$governance = new Governance();
 		$action    = (string) $request->get_param( 'action' );
 		$server_id = (string) $request->get_param( 'server_id' );
 
 		if ( '' === $server_id ) {
-			return rest_ensure_response( Result::error( 'vc_missing_server' )->to_view() );
+			return rest_ensure_response( \VinkiusConnector\Result::error( 'vc_missing_server' )->to_view() );
 		}
 
 		switch ( $action ) {
@@ -417,7 +410,7 @@ final class Rest {
 				$result = $api->soar_status( $server_id );
 				break;
 			default:
-				$result = Result::error( 'vc_unknown_action' );
+				$result = \VinkiusConnector\Result::error( 'vc_unknown_action' );
 				break;
 		}
 
@@ -427,7 +420,7 @@ final class Rest {
 	/**
 	 * Generate a new evidence pack now (paid-only upstream).
 	 *
-	 * @return WP_REST_Response
+	 * @return \WP_REST_Response
 	 */
 	public static function panel_evidence_pack_generate() {
 		return rest_ensure_response( ( new Governance() )->evidence_pack_generate()->to_view() );
@@ -436,14 +429,14 @@ final class Rest {
 	/**
 	 * One evidence pack for in-panel verification.
 	 *
-	 * @param WP_REST_Request $request {id}.
-	 * @return WP_REST_Response
+	 * @param \WP_REST_Request $request {id}.
+	 * @return \WP_REST_Response
 	 */
 	public static function panel_evidence_pack( $request ) {
 		$id = (string) $request->get_param( 'id' );
 
 		if ( '' === $id ) {
-			return rest_ensure_response( Result::error( 'vc_missing_pack' )->to_view() );
+			return rest_ensure_response( \VinkiusConnector\Result::error( 'vc_missing_pack' )->to_view() );
 		}
 
 		return rest_ensure_response( ( new Governance() )->evidence_pack_view( $id )->to_view() );
@@ -452,8 +445,8 @@ final class Rest {
 	/**
 	 * Control/activity feeds: {scope: org|activity}.
 	 *
-	 * @param WP_REST_Request $request Request.
-	 * @return WP_REST_Response
+	 * @param \WP_REST_Request $request Request.
+	 * @return \WP_REST_Response
 	 */
 	public static function panel_audit( $request ) {
 		$scope = 'activity' === $request->get_param( 'scope' ) ? 'activity' : 'org';
@@ -465,8 +458,8 @@ final class Rest {
 	/**
 	 * Enforcement settings mirror: {scope: dlp|finops}.
 	 *
-	 * @param WP_REST_Request $request Request.
-	 * @return WP_REST_Response
+	 * @param \WP_REST_Request $request Request.
+	 * @return \WP_REST_Response
 	 */
 	public static function panel_settings( $request ) {
 		$scope = 'finops' === $request->get_param( 'scope' ) ? 'finops' : 'dlp';
@@ -477,7 +470,7 @@ final class Rest {
 	/**
 	 * Rotate the site secret.
 	 *
-	 * @return WP_REST_Response
+	 * @return \WP_REST_Response
 	 */
 	public static function panel_regen_secret() {
 		$secret = wp_generate_password( 48, true, false );
@@ -492,30 +485,30 @@ final class Rest {
 	/**
 	 * Start device login.
 	 *
-	 * @return WP_REST_Response
+	 * @return \WP_REST_Response
 	 */
 	public static function device_init() {
-		return rest_ensure_response( ( new \VinkiusConnectorDeviceFlow() )->init()->to_view() );
+		return rest_ensure_response( ( new \VinkiusConnector\Auth\DeviceFlow() )->init()->to_view() );
 	}
 
 	/**
 	 * Poll device login.
 	 *
-	 * @return WP_REST_Response
+	 * @return \WP_REST_Response
 	 */
 	public static function device_poll() {
-		return rest_ensure_response( ( new \VinkiusConnectorDeviceFlow() )->poll()->to_view() );
+		return rest_ensure_response( ( new \VinkiusConnector\Auth\DeviceFlow() )->poll()->to_view() );
 	}
 
 	/**
 	 * Clear the stored session.
 	 *
-	 * @return WP_REST_Response
+	 * @return \WP_REST_Response
 	 */
 	public static function logout() {
-		( new \VinkiusConnectorVinkiusApi() )->logout();
-		\VinkiusConnectorAuthStore::clear();
-		( new \VinkiusConnectorDeviceFlow() )->abort();
+		( new \VinkiusConnector\VinkiusApi() )->logout();
+		\VinkiusConnector\Auth\AuthStore::clear();
+		( new \VinkiusConnector\Auth\DeviceFlow() )->abort();
 
 		return rest_ensure_response( array( 'ok' => true ) );
 	}

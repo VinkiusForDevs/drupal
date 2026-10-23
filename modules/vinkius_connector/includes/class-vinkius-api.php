@@ -9,8 +9,9 @@
  * @package VinkiusConnector
  */
 
-namespace Drupal\vinkius_connector;
+namespace VinkiusConnector;
 
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Architecture law: the plugin is the owner's observation-and-response
@@ -74,7 +75,7 @@ final class VinkiusApi {
 	 * @return string
 	 */
 	public function badge_url( $scan_id ) {
-		return rtrim( Options::API_BASE_URL, '/' )
+		return rtrim( VC_API_BASE_URL, '/' )
 			. '/debugger/scan/' . rawurlencode( $scan_id ) . '/badge.svg';
 	}
 
@@ -95,7 +96,7 @@ final class VinkiusApi {
 			return Result::not_configured();
 		}
 
-		$token = AuthStore::access_token();
+		$token = \VinkiusConnector\Auth\AuthStore::access_token();
 
 		if ( ! $token->is_ok() || empty( $token->data()['token'] ) ) {
 			return $token;
@@ -431,7 +432,7 @@ final class VinkiusApi {
 	 * @return string|null
 	 */
 	private function optional_bearer() {
-		$token = AuthStore::access_token();
+		$token = \VinkiusConnector\Auth\AuthStore::access_token();
 
 		return ( $token->is_ok() && ! empty( $token->data()['token'] ) ) ? $token->data()['token'] : null;
 	}
